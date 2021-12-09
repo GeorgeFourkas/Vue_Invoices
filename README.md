@@ -1,4 +1,4 @@
-# invoice
+# Vue 3 Invoices App
 
 ## Project setup
 ```
@@ -10,10 +10,6 @@ npm install
 npm run serve
 ```
 
-### Compiles and minifies for production
-```
-npm run build
-```
 
 ### Lints and fixes files
 ```
