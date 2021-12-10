@@ -1,7 +1,6 @@
 <template>
     <div class="home container">
         <!--    Header-->
-
         <div class="header flex">
             <div class="left flex flex-column">
                 <h1>Invoices</h1>
@@ -30,6 +29,7 @@
 </template>
 
 <script>
+import {mapMutations} from "vuex"
 export default {
     name: "Home",
     components: {},
@@ -40,8 +40,9 @@ export default {
         }
     },
     methods:{
+        ...mapMutations(['TOGGLE_INVOICE']),
         newInvoice(){
-
+            this.TOGGLE_INVOICE();
         },
 
         toggleFilterMenu(){
