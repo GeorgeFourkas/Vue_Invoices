@@ -124,6 +124,7 @@
 
 <script>
 import {mapMutations} from "vuex";
+import db from '../firebase/firebaseinit.js'
 import {uid} from 'uid';
 
 export default {
@@ -170,21 +171,63 @@ export default {
                 price: 0,
                 total: 0
             });
+
         },
+
         deleteInvoiceItem(id) {
             this.invoiceItemList = this.invoiceItemList.filter(item => item.id !== id);
         },
-        publishInvoice() {
 
+        calcInvoiceTotal() {
+            this.invoiceTotal = 0;
+            this.invoiceItemList.forEach(item => {
+                this.invoiceTotal += item.total
+            });
+        },
+        publishInvoice() {
+            this.invoicePending = true;
         },
         saveDraft() {
-
+            this.invoiceDraft = true;
         },
+
+
         submitForm() {
             this.uploadInvoice()
         },
-        async uploadInvoice(){
+        async uploadInvoice() {
+            if (this.invoiceItemList.length <= 0) {
+                alert("Please ensure you fill out work items!");
+                return;
+            }
+            this.calcInvoiceTotal();
 
+            const database = db.collection('invoices').doc();
+
+            await database.set({
+                invoiceId: uid(6),
+                billerStreetAddress: this.billerStreetAddress,
+                billerCity: this.billerCity,
+                billerZipCode: this.billerZipCode,
+                billerCountry: this.billerCountry,
+                clientName: this.clientName,
+                clientEmail: this.clientEmail,
+                clientStreetAddress: this.clientStreetAddress,
+                clientCity: this.clientCity,
+                clientZipCode: this.clientZipCode,
+                clientCountry: this.clientCountry,
+                invoiceDateUnix: this.invoiceDateUnix,
+                invoiceDate: this.invoiceDate,
+                paymentTerms: this.paymentTerms,
+                paymentDueDateUnix: this.paymentDueDateUnix,
+                paymentDueDate: this.paymentDueDate,
+                productDescription: this.productDescription,
+                invoicePending: this.invoicePending,
+                invoiceDraft: this.invoiceDraft,
+                invoiceTotal: this.invoiceTotal,
+            });
+
+            this.TOGGLE_INVOICE();
         }
     },
     watch: {
